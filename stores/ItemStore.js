@@ -22,8 +22,7 @@ var MOCKED_ITEMS = [
 
 class ItemStore {
   getItems() {
-    console.log("GET" + MOCKED_ITEMS);
-    return MOCKED_ITEMS;
+    return MOCKED_ITEMS.sort((first, second) => second.score - first.score);
   }
 
   addItem(name: string, thumbnail: string, creator: string) {
@@ -31,10 +30,25 @@ class ItemStore {
       id: MOCKED_ITEMS.length + 1,
       name: name,
       thumbnail: thumbnail,
-      score: 0,
+      score: 5,
       creator: creator
     });
-    console.log(MOCKED_ITEMS);
+  }
+
+  markItem(item: object, rate: {name: string, score: number}) {
+    var item = MOCKED_ITEMS.find(mi => mi.id == item.id)
+    console.log(item);
+    if (item != undefined) {
+      let additionalScore = (rate.score - 5) != 0 ? (rate.score - 5) / 10 : 0;
+      let newScore = item.score + additionalScore;
+      if (newScore > 10) {
+        item.score = 10;
+      } else if (newScore < 0) {
+        item.score = 0;
+      } else {
+        item.score = Math.round(newScore * 100)/100;
+      }
+    }
   }
 }
 

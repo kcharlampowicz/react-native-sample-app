@@ -6,7 +6,6 @@ import {
 
 import MainScreen from './components/MainScreen'
 
-
 var _navigator;
 BackAndroid.addEventListener('hardwareBackPress', () => {
   if (_navigator && _navigator.getCurrentRoutes().length > 1) {

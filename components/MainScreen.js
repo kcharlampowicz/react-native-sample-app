@@ -40,7 +40,8 @@ class MainScreen extends Component {
         addItem={() => this.addItem()}/>;
     }
     if (route.name == 'Item') {
-      return <ItemView {...route.passProps} rate={() => this.rateItem()}/>
+      return <ItemView {...route.passProps}
+        rate={(item, score) => this.rateItem(item, score)}/>
     }
     if (route.name == 'Add') {
       return <AddItem style={styles.container}
@@ -51,9 +52,9 @@ class MainScreen extends Component {
   }
 
   onSuccess(photo, name, creator) {
-    this._navigator.pop();
     this.itemStore.addItem(name, photo, creator);
     this.setState({items: this.itemStore.getItems()});
+    this._navigator.pop();
   }
 
   onFail() {
@@ -64,7 +65,9 @@ class MainScreen extends Component {
     this._navigator.push({name: 'Add'})
   }
 
-  rateItem(item, score) {
+  rateItem(item, rate: {name: string, score: number}) {
+    this.itemStore.markItem(item, rate);
+    this.setState({items: this.itemStore.getItems()});
     this._navigator.pop();
   }
 
