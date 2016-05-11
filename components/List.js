@@ -26,7 +26,7 @@ class List extends Component {
         dataSource={dataSource}
         renderRow={this.renderItem.bind(this)}/>
         <TouchableHighlight onPress={() => this.props.addItem()} style={styles.button}>
-          <Text style={styles.buttonLabel}>Add review</Text>
+          <Text style={styles.buttonLabel}>Add product to review</Text>
         </TouchableHighlight>
       </View>
     )

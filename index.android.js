@@ -50,17 +50,15 @@ class rateItApp extends Component {
     }
     if (route.name == 'Add') {
       return <AddItem style={styles.container}
-        onSuccess={(photo) => this.onSuccess(photo)}
+        onSuccess={(photo, name, creator) => this.onSuccess(photo, name, creator)}
         onFail={this.onFail}/>
     }
     return <View/>;
   }
 
-  onSuccess(photo) {
+  onSuccess(photo, name, creator) {
     _navigator.pop();
-    this.itemStore.addItem('Test',
-    'http://www.myworldhut.com/product_images/x/cafe_prima_finezja_mielona_250g__89716.jpg',
-    'Jan');
+    this.itemStore.addItem(name, photo, creator);
     this.setState({items: this.itemStore.getItems()});
   }
 
@@ -72,8 +70,7 @@ class rateItApp extends Component {
     _navigator.push({name: 'Add'})
   }
 
-  rateItem(item, mark) {
-    console.log(mark.name + " Score: " + mark.score);
+  rateItem(item, score) {
     _navigator.pop();
   }
 
