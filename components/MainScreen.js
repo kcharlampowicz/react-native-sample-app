@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import {
   View,
+  CameraRoll,
   Navigator,
   StyleSheet,
   TouchableHighlight,
@@ -16,12 +17,22 @@ import ItemView from './ItemView'
 import ItemStore from '../stores/ItemStore'
 
 class MainScreen extends Component {
-  constructor(props) {
+  state: {
+    items: Array<{}>
+  };
+  props: {
+
+  };
+  itemStore: ItemStore;
+  _navigator: Navigator;
+
+  constructor(props: Object) {
     super(props);
      this.itemStore = new ItemStore();
      this.state = {
-       items: this.itemStore.getItems()
+       items: []
      }
+     this._loadItems();
   }
 
   render() {
@@ -31,7 +42,7 @@ class MainScreen extends Component {
     );
   }
 
-  renderScene(route, navigator) {
+  renderScene(route: string, navigator: Navigator) {
     this._navigator = navigator;
     this.props.attachNavigator(navigator);
     if (route.name == 'List') {
@@ -51,10 +62,11 @@ class MainScreen extends Component {
     return <View/>;
   }
 
-  onSuccess(photo, name, creator) {
-    this.itemStore.addItem(name, photo, creator);
-    this.setState({items: this.itemStore.getItems()});
+  onSuccess(photo: {data: string}, name: string, creator: string) {
     this._navigator.pop();
+    this.itemStore.addItem(name, photo.data, creator, () => {
+      this._loadItems();
+    });
   }
 
   onFail() {
@@ -66,13 +78,18 @@ class MainScreen extends Component {
   }
 
   rateItem(item, rate: {name: string, score: number}) {
-    this.itemStore.markItem(item, rate);
-    this.setState({items: this.itemStore.getItems()});
     this._navigator.pop();
+    this.itemStore.rateItem(item, rate, () => {
+      this._loadItems();
+    });
   }
 
   onItemSelect(item) {
     this._navigator.push({name: 'Item', passProps: {item: item}})
+  }
+
+  _loadItems() {
+    this.itemStore.getItems((items) => this.setState({items: items}));
   }
 }
 

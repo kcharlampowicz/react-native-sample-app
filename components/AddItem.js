@@ -13,7 +13,19 @@ import {
 } from 'react-native';
 import Camera from 'react-native-camera';
 class AddItem extends Component {
-  constructor(props) {
+  props: {
+    onSuccess(photo:string, name: string, creator: string): void,
+    onFail(): void
+  };
+  camera: {
+    capture():Promise
+  };
+  state: {
+    name: string,
+    creator: string
+  };
+
+  constructor(props: Object) {
     super(props);
     this.state = {
       name: '',
@@ -27,6 +39,7 @@ class AddItem extends Component {
         <Camera
           ref={(cam) => {this.camera = cam}}
           style={styles.preview}
+          captureTarget={Camera.constants.CaptureTarget.memory}
           aspect={Camera.constants.Aspect.fill}>
         </Camera>
         <TextInput value={this.state.name}
@@ -44,7 +57,7 @@ class AddItem extends Component {
   takePicture() {
     this.camera.capture()
       .then((data) => {
-        this.props.onSuccess(data.path, this.state.name, this.state.creator);
+        this.props.onSuccess(data, this.state.name, this.state.creator);
       })
       .catch(err => {
         this.props.onFail();

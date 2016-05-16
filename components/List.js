@@ -11,9 +11,12 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from 'react-native';
+import DataSource from 'ListViewDataSource';
 
 class List extends Component {
-  constructor(props) {
+  ds: DataSource;
+
+  constructor(props: Object) {
     super(props);
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
@@ -22,7 +25,7 @@ class List extends Component {
     var dataSource = this.ds.cloneWithRows(this.props.items);
     return (
       <View>
-        <ListView style={this.props.listView}
+        <ListView style={this.props.listView} enableEmptySections={true}
         dataSource={dataSource}
         renderRow={this.renderItem.bind(this)}/>
         <TouchableHighlight onPress={() => this.props.addItem()} style={styles.button}>
@@ -32,7 +35,7 @@ class List extends Component {
     )
   }
 
-  renderItem(item) {
+  renderItem(item: {id: number, name: string, thumbnail: string, score: number}) {
     return (
       <View>
         <TouchableHighlight onPress={() => this.props.onSelect(item)}>
